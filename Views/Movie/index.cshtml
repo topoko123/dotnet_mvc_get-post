@@ -1,0 +1,99 @@
+@model IEnumerable<dotnet_mvc.Models.Movie>
+@{
+    ViewData["Title"] = "Movice Index Page";
+    var defaultSortOrder = "asc";
+    @* if (Context.Request.Query["order"].ToString() == "asc") {
+        defaultSortOrder = "desc";
+    }
+    else if (Context.Request.Query["order"].ToString() == "desc") {
+        defaultSortOrder = "asc";
+    } *@
+    if (Context.Request.Form["order"].ToString() == "asc") {
+        defaultSortOrder = "desc";
+    }
+    else if (Context.Request.Form["order"].ToString() == "desc") {
+        defaultSortOrder = "asc";
+    }
+
+}
+
+<h4>All Movie</h4>
+
+<div class="alert">
+    Click @ViewData["titleName"]
+</div>
+
+<div class="row">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @* <a asp-route-sort="id" asp-route-order="@defaultSortOrder">
+                        @Html.DisplayNameFor(m => m.Id)
+                    </a> *@
+                    <form method="post">
+                        <input type="hidden" name="sort" value="id" />
+                        <input type="hidden" name="order" value="@defaultSortOrder" />
+                        <input type="submit" value="@Html.DisplayNameFor(m => m.Id)" class="btn btn-link" />
+                    </form>
+                </th>
+                <th>
+                    <a asp-route-sort="title" asp-route-order="@defaultSortOrder">
+                    @Html.DisplayNameFor(m => m.Title)
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sort="releaseDate" asp-route-order="@defaultSortOrder">
+                        @Html.DisplayNameFor(m => m.ReleaseDate)
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sort="genre" asp-route-order="@defaultSortOrder">
+                        @Html.DisplayNameFor(m => m.Genre)
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sort="price" asp-route-order="@defaultSortOrder">
+                        @Html.DisplayNameFor(m => m.Price)
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => movie.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => movie.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => movie.ReleaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => movie.Genre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => movie.Price)
+                    </td>
+                    <td>
+                        <form asp-action="DeleteMovie" method="post">
+                        <input type="hidden" name="movieId" value="@movie.Id" />
+                        <input type="submit" class="btn btn-danger" value="ลบ"/>
+                    </form>
+                    </td>
+                    @* <td>
+                        <a asp-controller="Movie"
+                        asp-action="Index"
+                        asp-route-id=@movie.Id
+                        asp-route-titleName=@movie.Title
+                        class="btn btn-primary">เลือกดู</a>
+                    </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
